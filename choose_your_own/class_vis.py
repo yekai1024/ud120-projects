@@ -4,7 +4,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pylab as pl
 
-def prettyPicture(clf, X_test, y_test):
+def prettyPicture(clf, X_test, y_test, alg_type = "GNB"):
+    """
+
+    :type alg_type: object
+    """
     x_min = 0.0; x_max = 1.0
     y_min = 0.0; y_max = 1.0
     
@@ -16,6 +20,7 @@ def prettyPicture(clf, X_test, y_test):
 
     # Put the result into a color plot
     Z = Z.reshape(xx.shape)
+    fig = plt.figure(alg_type)
     plt.xlim(xx.min(), xx.max())
     plt.ylim(yy.min(), yy.max())
 
@@ -27,13 +32,16 @@ def prettyPicture(clf, X_test, y_test):
     grade_bkg = [X_test[ii][0] for ii in range(0, len(X_test)) if y_test[ii]==1]
     bumpy_bkg = [X_test[ii][1] for ii in range(0, len(X_test)) if y_test[ii]==1]
 
+
     plt.scatter(grade_sig, bumpy_sig, color = "b", label="fast")
     plt.scatter(grade_bkg, bumpy_bkg, color = "r", label="slow")
     plt.legend()
     plt.xlabel("bumpiness")
     plt.ylabel("grade")
+    plt.title("Algorithm " + alg_type)
 
-    plt.savefig("test.png")
+    #fig.show()
+    #fig.savefig(alg_type+".png")
 
 import base64
 import json
