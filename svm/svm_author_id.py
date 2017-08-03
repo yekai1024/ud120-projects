@@ -83,8 +83,9 @@ print "accuracy: ", accuracy
 print "no. of Chris test emails:", sum(pred)
 print "no. of Sara test emails:", len(pred) - sum(pred)
 
+# Using [[x]] to avoid 1d arrays warning
 # equal to below for loop
-# print map(lambda x: clf.predict(features_test[x]), [10,26,50])
+# print map(lambda x: clf.predict(features_test[[x]]), [10,26,50])
 
 #for x in [10,26,50]:
-#    print clf.predict(features_test[x])
+#    print clf.predict(features_test[[x]])
