@@ -13,7 +13,8 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
-
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 
 
@@ -33,8 +34,8 @@ def Draw(pred, features, poi, mark_poi=False, name="image.png", f1_name="feature
                 plt.scatter(features[ii][0], features[ii][1], color="r", marker="*")
     plt.xlabel(f1_name)
     plt.ylabel(f2_name)
-    plt.savefig(name)
-    plt.show()
+    #plt.savefig(name)
+    #plt.show()
 
 
 
@@ -50,7 +51,9 @@ feature_1 = "salary"
 feature_2 = "exercised_stock_options"
 poi  = "poi"
 features_list = [poi, feature_1, feature_2]
+features_list3 = [poi, feature_1, feature_2, "total_payment"]
 data = featureFormat(data_dict, features_list )
+data3 = featureFormat(data_dict, features_list3 )
 poi, finance_features = targetFeatureSplit( data )
 
 
@@ -58,19 +61,42 @@ poi, finance_features = targetFeatureSplit( data )
 ### you'll want to change this line to 
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
+f1_list = []
+f2_list = []
 for f1, f2 in finance_features:
     plt.scatter( f1, f2 )
-plt.show()
+    if f1:
+        f1_list.append(f1)
+    if f2:
+        f2_list.append(f2)
+#plt.show()
+
+
+print "salary", min(f1_list), max(f1_list)
+print "exercised_stock_options", min(f2_list), max(f2_list)
+scaler = MinMaxScaler()
+s_salary = scaler.fit_transform(numpy.array([min(f1_list), max(f1_list), 200000], dtype=numpy.float))
+s_eso = scaler.fit_transform(numpy.array([min(f2_list), max(f2_list), 1000000], dtype=numpy.float))
+print "Scaled Salary", s_salary
+print "Scaled Saexercised_stock_optionslary", s_eso
 
 ### cluster here; create predictions of the cluster labels
 ### for the data and store them to a list called pred
-
-
-
+kmeans = KMeans(n_clusters=2, random_state=0).fit(finance_features)
+pred = kmeans.labels_
+print kmeans.cluster_centers_
 
 ### rename the "name" parameter when you change the number of features
 ### so that the figure gets saved to a different file
 try:
-    Draw(pred, finance_features, poi, mark_poi=False, name="clusters.pdf", f1_name=feature_1, f2_name=feature_2)
+    Draw(pred, finance_features, poi, mark_poi=False, name="clusters.png", f1_name=feature_1, f2_name=feature_2)
 except NameError:
     print "no predictions object named pred found, no clusters to plot"
+
+
+for f1, f2 in kmeans.cluster_centers_:
+    plt.scatter( f1, f2 , color="r", marker="*")
+
+#plt.show()
+
+
