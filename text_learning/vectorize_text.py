@@ -56,7 +56,7 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
 
             ### use str.replace() to remove any instances of the words
             ### ["sara", "shackleton", "chris", "germani"]
-            for keyword in ["sara", "shackleton", "chris", "germani"]:
+            for keyword in ["sara", "shackleton", "chris", "germani","sshacklensf","cgermannsf"]:
                 text = text.replace(keyword, "")
 
             ### append the text to word_data
@@ -87,6 +87,5 @@ vectorizer = TfidfVectorizer(#sublinear_tf=True, max_df=0.5,
 word_transformed = vectorizer.fit_transform(word_data)
 print len(vectorizer.get_feature_names())
 print vectorizer.get_feature_names()[34597]
-
 
 
